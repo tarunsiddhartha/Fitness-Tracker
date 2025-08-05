@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Tracker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            margin: 0;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        
+        .profile-section, .workout-section, .stats-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-info {
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .workout-list {
+            margin-top: 20px;
+        }
+        
+        .workout-item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        
+        .workout-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fitness Tracker</h1>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="dashboard">
+            <div class="left-column">
+                <div class="profile-section">
+                    <h2>My Profile</h2>
+                    <div class="profile-info" id="profileInfo">
+                        <p>Please set up your profile to get started.</p>
+                    </div>
+                    
+                    <h3>Update Profile</h3>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Age</label>
+                            <input type="number" id="age" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (kg)</label>
+                            <input type="number" id="weight" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Height (cm)</label>
+                            <input type="number" id="height" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="goal">Fitness Goal</label>
+                            <select id="goal" required>
+                                <option value="lose">Lose Weight</option>
+                                <option value="maintain">Maintain Weight</option>
+                                <option value="gain">Gain Weight</option>
+                            </select>
+                        </div>
+                        <button type="submit">Save Profile</button>
+                    </form>
+                </div>
+                
+                <div class="stats-section">
+                    <h2>Weekly Stats</h2>
+                    <div class="stats-cards">
+                        <div class="stat-card">
+                            <h3>Workouts</h3>
+                            <div class="stat-value" id="workoutsCount">0</div>
+                            <p>This week</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Calories</h3>
+                            <div class="stat-value" id="caloriesBurned">0</div>
+                            <p>kcal burned</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Duration</h3>
+                            <div class="stat-value" id="workoutDuration">0</div>
+                            <p>minutes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="workout-section">
+                    <h2>Log Workout</h2>
+                    <form id="workoutForm">
+                        <div class="form-group">
+                            <label for="workoutType">Workout Type</label>
+                            <select id="workoutType" required>
+                                <option value="running">Running</option>
+                                <option value="cycling">Cycling</option>
+                                <option value="swimming">Swimming</option>
+                                <option value="weightlifting">Weightlifting</option>
+                                <option value="yoga">Yoga</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="duration">Duration (minutes)</label>
+                            <input type="number" id="duration" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="calories">Calories Burned</label>
+                            <input type="number" id="calories" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="intensity">Intensity</label>
+                            <select id="intensity" required>
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <input type="text" id="notes">
+                        </div>
+                        <button type="submit">Add Workout</button>
+                    </form>
+                    
+                    <h2>Recent Workouts</h2>
+                    <div class="workout-list" id="workoutList">
+                        <p>No workouts logged yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data storage (in a real app, you would use a backend/database)
+        let fitnessData = {
+            profile: null,
+            workouts: []
+        };
+
+        // Load data from localStorage if available
+        if (localStorage.getItem('fitnessData')) {
+            fitnessData = JSON.parse(localStorage.getItem('fitnessData'));
+            updateUI();
+        }
+
+        // Profile form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fitnessData.profile = {
+                name: document.getElementById('name').value,
+                age: parseInt(document.getElementById('age').value),
+                weight: parseFloat(document.getElementById('weight').value),
+                height: parseInt(document.getElementById('height').value),
+                goal: document.getElementById('goal').value
+            };
+            
+            saveData();
+            updateUI();
+            this.reset();
+        });
+
+        // Workout form submission
+        document.getElementById('workoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const workout = {
+                date: new Date().toISOString(),
+                type: document.getElementById('workoutType').value,
+                duration: parseInt(document.getElementById('duration').value),
+                calories: parseInt(document.getElementById('calories').value),
+                intensity: document.getElementById('intensity').value,
+                notes: document.getElementById('notes').value
+            };
+            
+            fitnessData.workouts.unshift(workout); // Add to beginning of array
+            saveData();
+            updateUI();
+            this.reset();
+        });
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('fitnessData', JSON.stringify(fitnessData));
+        }
+
+        // Update all UI elements
+        function updateUI() {
+            updateProfileInfo();
+            updateWorkoutList();
+            updateStats();
+        }
+
+        // Update profile section
+        function updateProfileInfo() {
+            const profileInfo = document.getElementById('profileInfo');
+            
+            if (fitnessData.profile) {
+                profileInfo.innerHTML = `
+                    <p><strong>Name:</strong> ${fitnessData.profile.name}</p>
+                    <p><strong>Age:</strong> ${fitnessData.profile.age}</p>
+                    <p><strong>Weight:</strong> ${fitnessData.profile.weight} kg</p>
+                    <p><strong>Height:</strong> ${fitnessData.profile.height} cm</p>
+                    <p><strong>Goal:</strong> ${getGoalText(fitnessData.profile.goal)}</p>
+                `;
+            } else {
+                profileInfo.innerHTML = '<p>Please set up your profile to get started.</p>';
+            }
+        }
+
+        function getGoalText(goal) {
+            switch(goal) {
+                case 'lose': return 'Lose Weight';
+                case 'maintain': return 'Maintain Weight';
+                case 'gain': return 'Gain Weight';
+                default: return goal;
+            }
+        }
+
+        // Update workout list
+        function updateWorkoutList() {
+            const workoutList = document.getElementById('workoutList');
+            
+            if (fitnessData.workouts.length === 0) {
+                workoutList.innerHTML = '<p>No workouts logged yet.</p>';
+                return;
+            }
+            
+            let html = '';
+            fitnessData.workouts.slice(0, 5).forEach(workout => {
+                const date = new Date(workout.date);
+                html += `
+                    <div class="workout-item">
+                        <p><strong>${workout.type.charAt(0).toUpperCase() + workout.type.slice(1)}</strong></p>
+                        <p>${date.toLocaleDateString()} - ${workout.duration} minutes</p>
+                        <p>${workout.calories} kcal burned (${workout.intensity} intensity)</p>
+                        ${workout.notes ? `<p>Notes: ${workout.notes}</p>` : ''}
+                    </div>
+                `;
+            });
+            
+            workoutList.innerHTML = html;
+        }
+
+        // Update statistics
+        function updateStats() {
+            if (!fitnessData.profile || fitnessData.workouts.length === 0) {
+                document.getElementById('workoutsCount').textContent = '0';
+                document.getElementById('caloriesBurned').textContent = '0';
+                document.getElementById('workoutDuration').textContent = '0';
+                return;
+            }
+            
+            // Get workouts from the last 7 days
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            
+            const recentWorkouts = fitnessData.workouts.filter(workout => {
+                return new Date(workout.date) >= oneWeekAgo;
+            });
+            
+            // Calculate stats
+            const totalWorkouts = recentWorkouts.length;
+            const totalCalories = recentWorkouts.reduce((sum, workout) => sum + workout.calories, 0);
+            const totalDuration = recentWorkouts.reduce((sum, workout) => sum + workout.duration, 0);
+            
+            // Update UI
+            document.getElementById('workoutsCount').textContent = totalWorkouts;
+            document.getElementById('caloriesBurned').textContent = totalCalories;
+            document.getElementById('workoutDuration').textContent = totalDuration;
+        }
+    </script>
+</body>
+</html>
